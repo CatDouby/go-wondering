@@ -1,3 +1,5 @@
+//go:build amd64
+
 package main
 
 import (
@@ -12,14 +14,15 @@ import (
 
 func main() {
 	// request()
+	// go build http_server.go
 
 	serve()
 }
 
 // http 服务端
 func serve() {
-	host := *flag.String("host", "localhost", "the serve host")
-	port := *flag.Int("port", 8081, "the listen port")
+	host := flag.String("h", "0.0.0.0", "the serve host")
+	port := flag.Int("p", 8081, "the listen port")
 	flag.Parse()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -27,16 +30,17 @@ func serve() {
 		w.Write([]byte("client " + r.RemoteAddr + "\nvisit /req-header show request header.\n"))
 		w.Write([]byte(currentTime()))
 	})
+
 	http.HandleFunc("/req-header", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(currentTime()))
-		r.Header.Set("ServedBy", "foo")
+		r.Header.Set("Servedby", "foo")
 		for k, v := range r.Header {
 			w.Write([]byte(k + ": " + v[0] + "\n"))
 		}
 	})
 
-	log.Println(fmt.Sprintf("Server is listening on %s:%d...", host, port))
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
+	log.Println(fmt.Sprintf("Server is listening on %s:%d...", *host, *port))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", *host, *port), nil))
 }
 
 // 发起 http 请求
