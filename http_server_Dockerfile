@@ -9,5 +9,7 @@ EXPOSE 8081
 ENTRYPOINT ["/http_server"]
 
 # scratch 为空容器，没有 bash cd mkdir 等命令，所以把可执行文件直接放在根目录，或者将事先建立好的目录拷 copy 到容器
-# go build http_server.go -o http_server
+
+# GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o http_server http_server.go
 # docker build -t fserver:pure -f http_server_Dockerfile .
+# docker run -itd --name ff -p 8081:8081 fserver:pure
