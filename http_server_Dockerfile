@@ -1,15 +1,21 @@
 FROM scratch
 
 MAINTAINER yhfoo
-WORKDIR /
+WORKDIR /work
 
-COPY ./http_server /
+COPY http_server /work
 EXPOSE 8081
 
-ENTRYPOINT ["/http_server"]
+ENV STATIC_DIR=/work/static_files
+
+ENTRYPOINT "/work/http_server" "-fd" ${STATIC_DIR}
+
 
 # scratch 为空容器，没有 bash cd mkdir 等命令，所以把可执行文件直接放在根目录，或者将事先建立好的目录拷 copy 到容器
 
-# GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o http_server http_server.go
-# docker build -t fserver:pure -f http_server_Dockerfile .
-# docker run -itd --name ff -p 8081:8081 fserver:pure
+# 编译得到可执行文件                 GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o http_server http_server.go
+# 打包得到 docker 镜像              docker build -t fserver:pure -f http_server_Dockerfile .
+# 运行容器，得到监听端口的server     docker run -itd --name ff -p 8081:8081 -v /path/public:/work/static_files fserver:pure
+
+# 挂载静态文件目录， http://host/static/xx.jpg 支持输出静态文件
+# ENV 变量可以在 docker run -e 时动态指定，从而实现不改变镜像情况下动态修改静态目录
