@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>账号密码登录</title>
+    <style>
+        .loading {
+            /* border: 16px solid #f3f3f3;*/
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>登录</h1>
+    <form>
+        <label for="username">账号:</label>
+        <input type="text" id="username" name="username" placeholder="{{.Name}}"><br><br>
+        <label for="password">密码:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="button" onclick="login()">登录</button>
+    </form>
+
+    <div id="loading" class="loading" style="display: none;"></div>
+
+    <script>
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // 显示Loading动画
+            document.getElementById("loading").style.display = "block";
+
+            // 模拟发送登录请求
+            setTimeout(function() {
+                // 登录成功后的操作
+                // ...
+
+                // 隐藏Loading动画
+                document.getElementById("loading").style.display = "none";
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
